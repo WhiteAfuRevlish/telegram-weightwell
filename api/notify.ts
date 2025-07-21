@@ -13,11 +13,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let message = '';
 
     if (table === 'orders') {
-      const { id, name, phone, email, city, address, notes, total_amount } = record;
+      const { id, name, phone, email, city, address, notes, total_amount, payment_method } = record;
 
       message += `🛒 <b>Нове замовлення</b>\n`;
-      message += `👤 Ім'я: <b>${name}</b>\n📞 Телефон: <b>${phone}</b>\n📧 Email: <b>${email}</b>\n🏙️ Місто: <b>${city}</b>\n🏡 Адреса: <b>${address}</b>\n📝 Коментар: ${notes || '-'}\n`;
-      message += `💵 Сума: <b>${total_amount} грн</b>\n📦 Товари:\n`;
+      message += `👤 Ім'я: <b>${name}</b>\n📞 Телефон: <b>${phone}</b>\n📧 Email: <b>${email}</b>\n🏙️ Місто: <b>${city}</b>\n🏡 Адреса Нової Пошти: <b>${address}</b>\n📝 Коментар: ${notes || '-'}\n`;
+      message += `💵 Сума: <b>${total_amount} грн</b>\n💳 Спосіб оплати: <b>${payment_method === 'fop' ? 'ФОП' : 'Накладений платіж'}</b>\n📦 Товари:\n`;
+
 
       const resItems = await fetch(`${SUPABASE_URL}/rest/v1/order_items?order_id=eq.${id}`, {
         headers: {
