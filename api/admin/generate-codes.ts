@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { withCors } from "../_cors";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 import { assertAdmin } from "./_utils";
@@ -20,7 +21,7 @@ function randCode() {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (!assertAdmin(req, res)) return;
+  if (withCors(req, res)) return;
 
   try {
     if (req.method !== "POST") return res.status(405).json({ ok: false, error: "METHOD_NOT_ALLOWED" });
