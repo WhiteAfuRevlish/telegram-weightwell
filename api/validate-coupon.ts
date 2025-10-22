@@ -1,5 +1,6 @@
 // /api/validate-coupon.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { withCors } from "../_cors"; // шлях відносно файлу
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.SUPABASE_URL!;
@@ -7,10 +8,7 @@ const SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE || process.env.SUPABASE_S
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  try {
-    if (req.method !== "POST") return res.status(405).json({ ok:false, error:"METHOD_NOT_ALLOWED" });
-    const { code } = (req.body || {}) as { code?: string };
-    if (!code) return res.status(400).json({ ok:false, error:"CODE_REQUIRED" });
+  if (withCors(req, res)) return;
 
     const { data, error } = await supabase
       .from("coupons")
