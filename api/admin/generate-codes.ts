@@ -41,12 +41,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (error) throw error;
 
     // CSV + QR URL
-    const base = process.env.PUBLIC_SITE_BASE_URL || "https://example.com";
-    const data = rows.map((r) => ({
-      code: r.code,
-      campaign: r.campaign,
-      qr_url: `${base}/spin?c=${encodeURIComponent(r.code)}`
-    }));
+    const base = process.env.PUBLIC_SITE_BASE_URL || "https://weightwell.com.ua";
+const qr_url = `${base}/spin?c=${encodeURIComponent(code)}`;
 
     const headers = ["code","campaign","qr_url"];
     const escape = (v:string) => `"${v.replace(/"/g,'""')}"`;
