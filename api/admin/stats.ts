@@ -1,9 +1,10 @@
 // /api/admin/stats.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { withCors } from "../_cors";
 import { assertAdmin, supabase } from "./_utils";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (!assertAdmin(req, res)) return;
+  if (withCors(req, res)) return;
   try {
     // 1) загальні
     const [codesTotal, codesUsed, spinsTotal, couponsTotal, ordersTotal] = await Promise.all([
