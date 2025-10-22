@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { withCors } from "../_cors"; // шлях відносно файлу
 import { createClient } from "@supabase/supabase-js";
 
 // ---- ENV ----
@@ -35,12 +36,7 @@ function bad(res: VercelResponse, code: number, msg: string) {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  try {
-    if (req.method !== "POST") {
-      // CORS для локалки
-      res.setHeader("Allow", "POST");
-      return bad(res, 405, "METHOD_NOT_ALLOWED");
-    }
+  if (withCors(req, res)) return;
 
     const payload = (req.body || {}) as { order: OrderInput };
 
