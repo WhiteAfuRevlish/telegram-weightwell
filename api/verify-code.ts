@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+mport { withCors } from "../_cors";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { createClient } from "@supabase/supabase-js";
@@ -19,10 +20,7 @@ function hmac(code: string) {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  try {
-    if (req.method !== "POST") {
-      return res.status(405).json({ ok: false, error: "METHOD_NOT_ALLOWED" });
-    }
+  if (withCors(req, res)) return;
 
     const { code } = (req.body || {}) as { code?: string };
     if (!code || typeof code !== "string") {
