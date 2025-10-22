@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { withCors } from "../_cors"; // шлях відносно файлу
 import crypto from "crypto";
 import { createClient } from "@supabase/supabase-js";
 
@@ -47,10 +48,7 @@ function weightedPick(prizes: Prize[]) {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  try {
-    if (req.method !== "POST") {
-      return res.status(405).json({ ok: false, error: "METHOD_NOT_ALLOWED" });
-    }
+  if (withCors(req, res)) return;
 
     const { token } = (req.body || {}) as { token?: any };
     if (!verifyToken(token)) {
